@@ -19,13 +19,74 @@ It isn't one app. It's a **21-project, 8-language** estate of cooperating servic
 
 A single CodeIgniter API is the source of truth; every client, AI service and integration microservice consumes it rather than touching the database directly.
 
-![Amplifi-Qx Architecture](assets/amplifi-qx_architecture.svg)
+​```mermaid
+flowchart TB
+    subgraph clients[Clients]
+      direction LR
+      HUB[Hub · React]
+      POR[Portal · React]
+      SOC[SOC desktop · Tauri]
+      MOB[Customer apps · Flutter]
+      PRO[Field app · SwiftUI]
+    end
+ 
+    API[["aqx_api · CodeIgniter<br/>~640 routes · v1 / v2 / v3"]]
+ 
+    subgraph ai[AI services · Python]
+      direction LR
+      ADK[30-agent system<br/>Google ADK]
+      MCP[MCP server<br/>100+ tools · 24 domains]
+      ANO[Anomaly detection<br/>FastAPI]
+    end
+ 
+    subgraph integ[Integration microservices]
+      direction LR
+      WAVE[WAVE / CEL-FI<br/>FastAPI · 10 scheduled jobs]
+      ANL[Analytics ingest · Go]
+    end
+ 
+    subgraph data[Data]
+      direction LR
+      MY[(MySQL · Redis)]
+      TS[(TimescaleDB)]
+      QD[(Qdrant · RAG memory)]
+    end
+ 
+    GATE{LiteLLM routing}
+ 
+    HUB --> API
+    POR --> API
+    SOC --> API
+    MOB --> API
+    PRO --> API
+ 
+    API --> ADK
+    API --> MCP
+    API --> ANO
+    API --> WAVE
+    API --> ANL
+    API --> MY
+ 
+    ADK --> GATE
+    GATE --> GEM[Gemini 2.5]
+    GATE --> CLA[Claude Sonnet]
+    GATE --> GPT[GPT-4o]
+    ADK --> QD
+    MCP -. read-only replica .-> TS
+    WAVE --> TS
+    ANL --> TS
+    ANO --> TS
+```
 
 ## The AI layer
 
 A hierarchical **30-agent** organisation coordinates work across the platform:
 
-![Amplifi-Qx AI layer](assets/amplifi-qx_hierarchy.svg)
+```mermaid
+flowchart TD
+    CMD[Chief AI Commander] --> TL[7 team leaders]
+    TL --> SP[22 specialist agents · across domains]
+```
 
 Built on Google ADK with multi-provider routing via LiteLLM - primarily Gemini, with Claude and OpenAI as fallback providers - and Qdrant-backed RAG memory (conversation history, company knowledge base, user preferences) behind a safe-memory wrapper.
 
