@@ -68,9 +68,9 @@ flowchart TB
     API --> MY
 
     ADK --> GATE
-    GATE --> GEM[Gemini 2.5]
-    GATE --> CLA[Claude Sonnet]
-    GATE --> GPT[GPT-4o]
+    GATE --> GEM[Gemini]
+    GATE --> CLA[Claude]
+    GATE --> GPT[ChatGPT]
     ADK --> QD
     MCP -. read-only replica .-> TS
     WAVE --> TS
