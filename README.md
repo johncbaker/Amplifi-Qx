@@ -1,8 +1,8 @@
 # Amplifi-Qx
 
-**The platform that runs an entire signal-booster business - end to end.**
+**The platform that runs an entire signal-booster business — end to end.**
 
-Amplifi-Qx is a vertically-integrated B2B SaaS platform for Signal Solutions, a mobile-signal booster installation and service company powered by Nextivity CEL-FI. It runs the business end to end: CRM, sales proposals, cellular surveys, field-installation workflow, hardware and site monitoring, finance, HR, partner management, customer self-service - and an internal AI-agent layer threaded across all of it. Its users span internal staff, field engineers, installation partners and end customers.
+Amplifi-Qx is a vertically-integrated B2B SaaS platform for Signal Solutions, a mobile-signal-booster (Nextivity CEL-FI / WAVE) installation and service company. It runs the business end to end: CRM, sales proposals, site surveys, field-installation workflow, hardware and site monitoring, finance, HR, partner management, customer self-service — and an internal AI-agent layer threaded across all of it. Its users span internal staff, field engineers, installation partners and end customers.
 
 It isn't one app. It's a **21-project, 8-language** estate of cooperating services, web apps, mobile apps, a desktop app and AI services, arranged hub-and-spoke around a single API.
 
@@ -19,7 +19,7 @@ It isn't one app. It's a **21-project, 8-language** estate of cooperating servic
 
 A single CodeIgniter API is the source of truth; every client, AI service and integration microservice consumes it rather than touching the database directly.
 
-​```mermaid
+```mermaid
 flowchart TB
     subgraph clients[Clients]
       direction LR
@@ -29,44 +29,44 @@ flowchart TB
       MOB[Customer apps · Flutter]
       PRO[Field app · SwiftUI]
     end
- 
+
     API[["aqx_api · CodeIgniter<br/>~640 routes · v1 / v2 / v3"]]
- 
+
     subgraph ai[AI services · Python]
       direction LR
       ADK[30-agent system<br/>Google ADK]
       MCP[MCP server<br/>100+ tools · 24 domains]
       ANO[Anomaly detection<br/>FastAPI]
     end
- 
+
     subgraph integ[Integration microservices]
       direction LR
       WAVE[WAVE / CEL-FI<br/>FastAPI · 10 scheduled jobs]
       ANL[Analytics ingest · Go]
     end
- 
+
     subgraph data[Data]
       direction LR
       MY[(MySQL · Redis)]
       TS[(TimescaleDB)]
       QD[(Qdrant · RAG memory)]
     end
- 
+
     GATE{LiteLLM routing}
- 
+
     HUB --> API
     POR --> API
     SOC --> API
     MOB --> API
     PRO --> API
- 
+
     API --> ADK
     API --> MCP
     API --> ANO
     API --> WAVE
     API --> ANL
     API --> MY
- 
+
     ADK --> GATE
     GATE --> GEM[Gemini 2.5]
     GATE --> CLA[Claude Sonnet]
@@ -88,7 +88,7 @@ flowchart TD
     TL --> SP[22 specialist agents · across domains]
 ```
 
-Built on Google ADK with multi-provider routing via LiteLLM - primarily Gemini, with Claude and OpenAI as fallback providers - and Qdrant-backed RAG memory (conversation history, company knowledge base, user preferences) behind a safe-memory wrapper.
+Built on Google ADK with multi-provider routing via LiteLLM — Gemini 2.5 primary, Claude Sonnet and GPT-4o as fallback — and Qdrant-backed RAG memory (conversation history, company knowledge base, user preferences) behind a safe-memory wrapper.
 
 ---
 
@@ -97,7 +97,7 @@ Built on Google ADK with multi-provider routing via LiteLLM - primarily Gemini, 
 - **Hub-and-spoke architecture.** One CodeIgniter API (v1 / v2 / v3 namespaces) is the single source of truth; mobile apps, portals, the MCP server and integration services all consume it, never the database directly.
 - **30-agent hierarchical AI system.** A Chief AI Commander → 7 team leaders → 22 specialists, on Google ADK, with LiteLLM multi-provider routing and Qdrant RAG memory.
 - **MCP server.** Exposes 100+ department-scoped tools across 24 domains to external LLMs, with prefix / exact / row-level ACLs, token-bucket rate limiting and Pydantic response guards, reading a read-only TimescaleDB replica.
-- **Resilient hardware integration.** The CEL-FI WAVE integration service runs 10 scheduled jobs behind a circuit breaker, token-bucket rate limiter, monthly credit tracker, idempotency guards and full audit logging.
+- **Resilient hardware integration.** The WAVE / CEL-FI service runs 10 scheduled jobs behind a circuit breaker, token-bucket rate limiter, monthly credit tracker, idempotency guards and full audit logging.
 - **Statistical anomaly detection.** MAD-based z-scores, IQR and seasonal decomposition applied to Xero finance transactions and cellular-signal readings — classical ML, no LLM required.
 - **Secure by design.** Tenant-scoped search tokens, httpOnly-cookie sessions, constant-time API-key comparison with hashed fingerprints in logs, build-time secret scrubbing from client bundles, and TimescaleDB compression / retention policies.
 
@@ -107,7 +107,7 @@ Built on Google ADK with multi-provider routing via LiteLLM - primarily Gemini, 
 |---|---|
 | **Backend / APIs** | PHP 8.3 · CodeIgniter 4.7 · Python 3.12 · FastAPI · Go 1.25 |
 | **Front-end / apps** | React 19 · Vite · Rust / Tauri (desktop) · Flutter / Dart · Swift / SwiftUI · Astro |
-| **AI / ML** | Google ADK · LiteLLM (Gemini · Claude · OpenAI) · Qdrant (RAG) · OpenAI Whisper · statistical anomaly detection |
+| **AI / ML** | Google ADK · LiteLLM (Gemini · Claude · GPT-4o) · Qdrant (RAG) · OpenAI Whisper · statistical anomaly detection |
 | **Data** | MySQL 8 · Redis · TimescaleDB (hypertables) · Qdrant · Appwrite · Meilisearch · Directus |
 | **Integrations** | Xero · Google Workspace · WhatsApp Business · TP-Link Omada · Firebase · Mux · n8n · PostHog … |
 | **Quality** | PHPUnit · Cypress · Playwright · pytest · XCTest · Semgrep · PHPStan (L6) · Rector |
